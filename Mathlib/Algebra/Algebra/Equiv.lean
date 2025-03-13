@@ -381,12 +381,15 @@ theorem symm_trans_apply (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A�
     (e₁.trans e₂).symm x = e₁.symm (e₂.symm x) :=
   rfl
 
-@[simp] lemma self_trans_symm (e : A₁ ≃ₐ[R] A₂) : e.trans e.symm = refl := by ext; simp
-@[simp] lemma symm_trans_self (e : A₁ ≃ₐ[R] A₂) : e.symm.trans e = refl := by ext; simp
+theorem self_trans_symm_eq_refl (e : A₁ ≃ₐ[R] A₂) :
+    e.trans e.symm = AlgEquiv.refl := by
+  ext
+  simp only [trans_apply, symm_apply_apply, coe_refl, id_eq]
 
-@[simp, norm_cast]
-lemma toRingHom_trans (e₁ : A₁ ≃ₐ[R] A₂) (e₂ : A₂ ≃ₐ[R] A₃) :
-    (e₁.trans e₂ : A₁ →+* A₃) = .comp e₂ (e₁ : A₁ →+* A₂) := rfl
+theorem symm_trans_self_eq_refl (e : A₁ ≃ₐ[R] A₂) :
+    e.symm.trans e = AlgEquiv.refl := by
+  ext
+  simp only [trans_apply, apply_symm_apply, coe_refl, id_eq]
 
 end trans
 

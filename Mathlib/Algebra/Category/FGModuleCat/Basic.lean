@@ -43,7 +43,7 @@ universe v w u
 
 section Ring
 
-variable (R : Type u) [Ring R]
+variable (R : Type v) [Ring R] [Small.{u} R]
 
 /-- Finitely generated modules, as a property of objects of `ModuleCat R`. -/
 def ModuleCat.isFG : ObjectProperty (ModuleCat.{v} R) :=
@@ -78,7 +78,7 @@ namespace FGModuleCat
 
 section Ring
 
-variable (R : Type u) [Ring R]
+variable (R : Type v) [Ring R]
 
 @[simp] lemma hom_hom_comp {A B C : FGModuleCat.{v} R} (f : A ⟶ B) (g : B ⟶ C) :
   (f ≫ g).hom.hom = g.hom.hom.comp f.hom.hom := rfl

@@ -308,7 +308,7 @@ be caught.
 Trace messages produced during the execution of `x` are wrapped in a collapsible trace node titled
 with `strategyDescr` and an indicator of success. -/
 private def tryStrategy (strategyDescr : MessageData) (x : TermElabM FindModelResult) :
-    TermElabM (Option FindModelResult) := do
+    TermElabM FindModelResult := do
   let s ← saveState
   try
     withTraceNode `Elab.DiffGeo.MDiff (fun _ => pure m!"{strategyDescr}") do
@@ -329,7 +329,7 @@ private def tryStrategy (strategyDescr : MessageData) (x : TermElabM FindModelRe
     -- Restore infotrees to prevent any stale hovers, code actions, etc.
     -- Note that this does not break tracing, which saves each trace message's context.
     s.restore true
-    return none
+    failure
 
 set_option linter.style.emptyLine false in -- linter false positive
 /-- Try to find a `ModelWithCorners` instance on a type (represented by an expression `e`),
@@ -369,23 +369,22 @@ This implementation is not maximally robust yet.
 -- TODO: better error messages when all strategies fail
 -- TODO: consider lowering monad to `MetaM`
 def findModelInner (e : Expr) (baseInfo : Option (Expr × Expr) := none) :
-    TermElabM (Option FindModelResult) := do
-  if let some m ← tryStrategy "TotalSpace"          fromTotalSpace      then return some m
-  if let some m ← tryStrategy "TangentBundle"       fromTangentBundle   then return some m
-  if let some m ← tryStrategy "NormedSpace"         fromNormedSpace     then return some m
-  if let some m ← tryStrategy "Manifold"            fromManifold        then return some m
-  if let some m ← tryStrategy "ContinuousLinearMap" fromCLM             then return some m
-  if let some m ← tryStrategy "RealInterval"        fromRealInterval    then return some m
-  if let some m ← tryStrategy "EuclideanSpace"      fromEuclideanSpace  then return some m
-  if let some m ← tryStrategy "UpperHalfPlane"      fromUpperHalfPlane  then return some m
-  if let some m ← tryStrategy "Units of algebra"    fromUnitsOfAlgebra  then return some m
-  if let some m ← tryStrategy "Complex unit circle" fromCircle          then return some m
-  if let some m ← tryStrategy "Sphere"              fromSphere          then return some m
-  if let some m ← tryStrategy "NormedField"         fromNormedField     then return some m
+    TermElabM FindModelResult := do
+  tryStrategy "TotalSpace"          fromTotalSpace     <|>
+  tryStrategy "TangentBundle"       fromTangentBundle  <|>
+  tryStrategy "NormedSpace"         fromNormedSpace    <|>
+  tryStrategy "Manifold"            fromManifold       <|>
+  tryStrategy "ContinuousLinearMap" fromCLM            <|>
+  tryStrategy "RealInterval"        fromRealInterval   <|>
+  tryStrategy "EuclideanSpace"      fromEuclideanSpace <|>
+  tryStrategy "UpperHalfPlane"      fromUpperHalfPlane <|>
+  tryStrategy "Units of algebra"    fromUnitsOfAlgebra <|>
+  tryStrategy "Complex unit circle" fromCircle         <|>
+  tryStrategy "Sphere"              fromSphere         <|>
+  tryStrategy "NormedField"         fromNormedField    <|>
   -- We run this strategy last, as it is the least likely to succeed.
   -- More commonly, we have a normed space on the nose, and `fromNormedSpace` should succeed.
-  if let some m ← tryStrategy "InnerProductSpace" fromInnerProductSpace then return some m
-  return none
+  tryStrategy "InnerProductSpace" fromInnerProductSpace
 where
   /- Note that errors thrown in the following are caught by `tryStrategy` and converted to trace
   messages. -/
@@ -394,8 +393,8 @@ where
   fromTotalSpace : TermElabM FindModelResult := do
     match_expr e with
     | Bundle.TotalSpace _ F V => do
-      if let some m ← tryStrategy m!"TangentSpace" (fromTotalSpace.tangentSpace V) then return m
-      if let some m ← tryStrategy m!"From base info" (fromTotalSpace.fromBaseInfo F) then return m
+      tryStrategy m!"TangentSpace" (fromTotalSpace.tangentSpace V) <|>
+      tryStrategy m!"From base info" (fromTotalSpace.fromBaseInfo F) <|>
       throwError "Having a TotalSpace as source is not yet supported"
     | _ => throwError "`{e}` is not a `Bundle.TotalSpace`."
   /-- Attempt to use the provided `baseInfo` to find a model. -/
@@ -753,7 +752,10 @@ partial def findModel (e : Expr) (baseInfo : Option (Expr × Expr) := none) : Te
 where
   go (e : Expr) (baseInfo : Option (Expr × Expr)) : TermElabM (Option FindModelResult) := do
     -- At first, try finding a model with corners on the space itself.
-    if let some m ← findModelInner e baseInfo then return some m
+    try
+      let m ← findModelInner e baseInfo
+      return some m
+    catch _ =>
     -- Otherwise, we recurse into the expression,
     -- depending whether we have an open subset of a space, a product, or a direct sum of spaces.
     match_expr e with

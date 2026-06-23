@@ -195,19 +195,17 @@ section interaction
 
 -- Note: these tests might be incomplete; extend as needed!
 
-/-- info: MDifferentiableAt I I.tangent fun m ↦ TotalSpace.mk' E m (X m) : M → Prop -/
+/-- info: MDifferentiableAt I I.tangent T% X : M → Prop -/
 #guard_msgs in
 #check MDiffAt (T% X)
 
-/--
-info: MDifferentiableAt I (I.prod (modelWithCornersSelf 𝕜 F)) fun x ↦ TotalSpace.mk' F x (σ x) : M → Prop
--/
+/-- info: MDifferentiableAt I (I.prod (modelWithCornersSelf 𝕜 F)) T% σ : M → Prop -/
 #guard_msgs in
 #check MDiffAt (T% σ)
 
 /--
-info: MDifferentiableAt (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E')) fun x ↦
-  TotalSpace.mk' E' x (σ' x) : E → Prop
+info: MDifferentiableAt (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E'))
+  T% σ' : E → Prop
 -/
 #guard_msgs in
 #check MDiffAt (T% σ')
@@ -950,15 +948,13 @@ info: mfderivWithin (modelWithCornersSelf 𝕜 E) (modelWithCornersSelf 𝕜 EM'
 variable {σ : Π x : M, V x} {σ' : (x : E) → Trivial E E' x} {s : E → E'}
 variable (X : (m : M) → TangentSpace I m) [IsManifold I 1 M] {x : M}
 
-/--
-info: mfderiv I I.tangent (fun m ↦ TotalSpace.mk' E m (X m))
-  x : ContinuousLinearMap (RingHom.id 𝕜) (TangentSpace I x) (TangentSpace I.tangent (TotalSpace.mk' E x (X x)))
--/
+set_option pp.notation true in
+/-- info: mfderiv% T% X x : TangentSpace I x →L[𝕜] TangentSpace I.tangent ⟨x, X x⟩ -/
 #guard_msgs in
-#check mfderiv% (T% X) x
+#check mfderiv% T% X x
 
 /--
-info: mfderiv I (I.prod (modelWithCornersSelf 𝕜 F)) (fun x ↦ TotalSpace.mk' F x (σ x))
+info: mfderiv I (I.prod (modelWithCornersSelf 𝕜 F)) (T% σ)
   x : ContinuousLinearMap (RingHom.id 𝕜) (TangentSpace I x)
   (TangentSpace (I.prod (modelWithCornersSelf 𝕜 F)) (TotalSpace.mk' F x (σ x)))
 -/
@@ -968,8 +964,7 @@ info: mfderiv I (I.prod (modelWithCornersSelf 𝕜 F)) (fun x ↦ TotalSpace.mk'
 variable {t : Set E} {p : E}
 
 /--
-info: mfderivWithin (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E'))
-  (fun x ↦ TotalSpace.mk' E' x (σ' x)) t
+info: mfderivWithin (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E')) (T% σ') t
   p : ContinuousLinearMap (RingHom.id 𝕜) (TangentSpace (modelWithCornersSelf 𝕜 E) p)
   (TangentSpace ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E')) (TotalSpace.mk' E' p (σ' p)))
 -/
@@ -977,8 +972,7 @@ info: mfderivWithin (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E)
 #check mfderiv[t] (T% σ') p
 
 /--
-info: mfderivWithin (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E'))
-  (fun x ↦ TotalSpace.mk' E' x (σ' x))
+info: mfderivWithin (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E')) (T% σ')
   t : (x : E) →
   ContinuousLinearMap (RingHom.id 𝕜) (TangentSpace (modelWithCornersSelf 𝕜 E) x)
     (TangentSpace ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E')) (TotalSpace.mk' E' x (σ' x)))
@@ -1093,7 +1087,7 @@ variable {σ : Π x : M, V x} {σ' : (x : E) → Trivial E E' x} {s : E → E'}
 variable (X : (m : M) → TangentSpace I m) [IsManifold I 1 M] {x : M}
 
 /--
-info: mfderiv I I.tangent (fun m ↦ TotalSpace.mk' E m (X m))
+info: mfderiv I I.tangent (T% X)
   x : ContinuousLinearMap (RingHom.id 𝕜) (TangentSpace I x) (TangentSpace I.tangent (TotalSpace.mk' E x (X x)))
 -/
 #guard_msgs in
@@ -1101,17 +1095,17 @@ info: mfderiv I I.tangent (fun m ↦ TotalSpace.mk' E m (X m))
 
 variable {dXm : TangentSpace I x →L[𝕜] TangentSpace (I.prod 𝓘(𝕜, E)) (TotalSpace.mk' E x (X x))}
 
-/-- info: HasMFDerivAt I I.tangent (fun m ↦ TotalSpace.mk' E m (X m)) x dXm : Prop -/
+/-- info: HasMFDerivAt I I.tangent (T% X) x dXm : Prop -/
 #guard_msgs in
 #check HasMFDerivAt% (T% X) x dXm
 
-/-- info: HasMFDerivWithinAt I I.tangent (fun m ↦ TotalSpace.mk' E m (X m)) t x dXm : Prop -/
+/-- info: HasMFDerivWithinAt I I.tangent (T% X) t x dXm : Prop -/
 #guard_msgs in
 variable {t : Set M} in
 #check HasMFDerivAt[t] (T% X) x dXm
 
 /--
-info: mfderiv I (I.prod (modelWithCornersSelf 𝕜 F)) (fun x ↦ TotalSpace.mk' F x (σ x))
+info: mfderiv I (I.prod (modelWithCornersSelf 𝕜 F)) (T% σ)
   x : ContinuousLinearMap (RingHom.id 𝕜) (TangentSpace I x)
   (TangentSpace (I.prod (modelWithCornersSelf 𝕜 F)) (TotalSpace.mk' F x (σ x)))
 -/
@@ -1120,15 +1114,11 @@ info: mfderiv I (I.prod (modelWithCornersSelf 𝕜 F)) (fun x ↦ TotalSpace.mk'
 
 variable {dσm : TangentSpace I x →L[𝕜] TangentSpace (I.prod 𝓘(𝕜, F)) (TotalSpace.mk' F x (σ x))}
 
-/--
-info: HasMFDerivAt I (I.prod (modelWithCornersSelf 𝕜 F)) (fun x ↦ TotalSpace.mk' F x (σ x)) x dσm : Prop
--/
+/-- info: HasMFDerivAt I (I.prod (modelWithCornersSelf 𝕜 F)) (T% σ) x dσm : Prop -/
 #guard_msgs in
 #check HasMFDerivAt% (T% σ) x dσm
 
-/--
-info: HasMFDerivWithinAt I (I.prod (modelWithCornersSelf 𝕜 F)) (fun x ↦ TotalSpace.mk' F x (σ x)) t x dσm : Prop
--/
+/-- info: HasMFDerivWithinAt I (I.prod (modelWithCornersSelf 𝕜 F)) (T% σ) t x dσm : Prop -/
 #guard_msgs in
 variable {t : Set M} in
 #check HasMFDerivAt[t] (T% σ) x dσm
@@ -1136,8 +1126,7 @@ variable {t : Set M} in
 variable {t : Set E} {p : E}
 
 /--
-info: mfderivWithin (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E'))
-  (fun x ↦ TotalSpace.mk' E' x (σ' x)) t
+info: mfderivWithin (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E')) (T% σ') t
   p : ContinuousLinearMap (RingHom.id 𝕜) (TangentSpace (modelWithCornersSelf 𝕜 E) p)
   (TangentSpace ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E')) (TotalSpace.mk' E' p (σ' p)))
 -/
@@ -1147,22 +1136,21 @@ info: mfderivWithin (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E)
 variable {dσ'p : TangentSpace 𝓘(𝕜, E) p →L[𝕜] TangentSpace (𝓘(𝕜, E).prod 𝓘(𝕜, E')) (TotalSpace.mk' E' p (σ' p))}
 
 /--
-info: HasMFDerivAt (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E'))
-  (fun x ↦ TotalSpace.mk' E' x (σ' x)) p dσ'p : Prop
+info: HasMFDerivAt (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E')) (T% σ') p
+  dσ'p : Prop
 -/
 #guard_msgs in
 #check HasMFDerivAt% (T% σ') p dσ'p
 
 /--
-info: HasMFDerivWithinAt (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E'))
-  (fun x ↦ TotalSpace.mk' E' x (σ' x)) t p dσ'p : Prop
+info: HasMFDerivWithinAt (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E')) (T% σ') t p
+  dσ'p : Prop
 -/
 #guard_msgs in
 #check HasMFDerivAt[t] (T% σ') p dσ'p
 
 /--
-info: mfderivWithin (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E'))
-  (fun x ↦ TotalSpace.mk' E' x (σ' x))
+info: mfderivWithin (modelWithCornersSelf 𝕜 E) ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E')) (T% σ')
   t : (x : E) →
   ContinuousLinearMap (RingHom.id 𝕜) (TangentSpace (modelWithCornersSelf 𝕜 E) x)
     (TangentSpace ((modelWithCornersSelf 𝕜 E).prod (modelWithCornersSelf 𝕜 E')) (TotalSpace.mk' E' x (σ' x)))

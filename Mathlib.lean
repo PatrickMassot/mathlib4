@@ -7002,7 +7002,7 @@ public import Mathlib.RingTheory.Support
 public import Mathlib.RingTheory.SurjectiveOnStalks
 public import Mathlib.RingTheory.Teichmuller
 public import Mathlib.RingTheory.TensorProduct.Basic
-public import Mathlib.RingTheory.TensorProduct.DirectLimit.FG
+public import Mathlib.RingTheory.TensorProduct.DirectLimitFG
 public import Mathlib.RingTheory.TensorProduct.DirectLimit.Small
 public import Mathlib.RingTheory.TensorProduct.Finite
 public import Mathlib.RingTheory.TensorProduct.Free

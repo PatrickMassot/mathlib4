@@ -213,8 +213,7 @@ theorem lTensor_fgEquiv_of' [DecidableEq {Q : Submodule R N // Q.FG}]
 
 variable {R M N}
 
-theorem TensorProduct.exists_rTensor_of_fg [DecidableEq {P : Submodule R M // P.FG}]
-    (t : M ⊗[R] N) :
+theorem TensorProduct.exists_rTensor_of_fg (t : M ⊗[R] N) :
     ∃ (P : Submodule R M), P.FG ∧ t ∈ LinearMap.range (LinearMap.rTensor N P.subtype) := by
   let ⟨P, u, hu⟩ := Module.DirectLimit.exists_of ((rTensor_fg_equiv R M N).symm t)
   use P.val, P.property, u

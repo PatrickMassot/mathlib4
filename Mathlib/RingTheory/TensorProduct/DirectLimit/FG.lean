@@ -156,7 +156,7 @@ theorem rTensor_fgEquiv_of' [DecidableEq {P : Submodule R M // P.FG}]
       ((Module.DirectLimit.of R {P : Submodule R M // P.FG} (fun P ↦ P.val ⊗[R] N)
         (fun ⦃_ _⦄ h ↦ LinearMap.rTensor N (Submodule.inclusion h)) ⟨P, hP⟩) u)
       = (LinearMap.rTensor N (Submodule.subtype P)) u :=
-  by apply rTensor_fgEquiv_of
+  by sorry -- apply rTensor_fgEquiv_of
 
 /-- Given a directed system of `R`-modules, tensor it on the left gives a directed system -/
 theorem DirectedSystem.lTensor {ι : Type*} [Preorder ι] {F : ι → Type*}

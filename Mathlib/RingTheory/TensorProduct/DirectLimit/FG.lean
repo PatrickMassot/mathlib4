@@ -265,8 +265,7 @@ open TensorProduct
 variable {R S N : Type*} [CommRing R] [CommRing S] [Algebra R S]
   [AddCommGroup N] [Module R N]
 
-theorem TensorProduct.Algebra.exists_rTensor_of_fg [DecidableEq {P : Submodule R S // P.FG}]
-    (t : S ⊗[R] N) :
+theorem TensorProduct.Algebra.exists_rTensor_of_fg (t : S ⊗[R] N) :
     ∃ (A : Subalgebra R S), Subalgebra.FG A ∧
       t ∈ LinearMap.range (LinearMap.rTensor N (Subalgebra.val A).toLinearMap) := by
   obtain ⟨P, hP, ht⟩ := TensorProduct.exists_rTensor_of_fg t

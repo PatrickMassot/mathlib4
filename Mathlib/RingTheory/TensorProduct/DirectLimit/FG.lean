@@ -137,8 +137,7 @@ noncomputable def rTensor_fg_equiv [DecidableEq {P : Submodule R M // P.FG}] :
       (fun ⦃P Q⦄ (h : P ≤ Q)  ↦ (Submodule.inclusion h).rTensor N) ≃ₗ[R] M ⊗[R] N :=
   (TensorProduct.directLimitLeft _ N).symm.trans ((Submodules_fg_equiv R M).rTensor N)
 
-theorem rTensor_fgEquiv_of  [DecidableEq {P : Submodule R M // P.FG}]
-    {P : {P : Submodule R M // P.FG}} (u : P ⊗[R] N) :
+theorem rTensor_fgEquiv_of {P : {P : Submodule R M // P.FG}} (u : P ⊗[R] N) :
     (rTensor_fg_equiv R M N)
       ((Module.DirectLimit.of R {P : Submodule R M // P.FG} (fun P ↦ P.val ⊗[R] N)
         (fun ⦃_ _⦄ h ↦ (Submodule.inclusion h).rTensor N) P) u)
@@ -250,7 +249,8 @@ theorem TensorProduct.eq_of_fg_of_subtype_eq₂
     LinearMap.rTensor_comp, LinearMap.coe_comp, Function.comp_apply] at h
   let ⟨Q, hQ_le, hQ, h⟩ := TensorProduct.eq_of_fg_of_subtype_eq (hP.sup hP') _ _ h
   use Q, le_trans le_sup_left hQ_le, le_trans le_sup_right hQ_le, hQ
-  simpa [← LinearMap.comp_apply, ← LinearMap.rTensor_comp] using h
+  simp only [← LinearMap.comp_apply, ← LinearMap.rTensor_comp] at h
+  convert h <;> (ext; simp)
 
 end TensorProducts
 
@@ -348,7 +348,8 @@ theorem TensorProduct.Algebra.eq_of_fg_of_subtype_eq₂
   let ⟨B, hB_le, hB, h⟩ := TensorProduct.Algebra.eq_of_fg_of_subtype_eq
     (Subalgebra.fg_sup hA hA') _ _ h
   use B, le_trans le_sup_left hB_le, le_trans le_sup_right hB_le, hB
-  simpa only [← LinearMap.rTensor_comp, ← LinearMap.comp_apply] using h
+  simp only [← LinearMap.comp_apply, ← LinearMap.rTensor_comp] at h
+  convert h <;> (ext; simp)
 
 /-- Lift an element that maps to 0 -/
 theorem Submodule.exists_fg_of_baseChange_eq_zero

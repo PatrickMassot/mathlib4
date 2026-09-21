@@ -3,10 +3,12 @@ Copyright (c) 2025 Antoine Chambert-Loir, María-Inés de Frutos-Fernández. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Chambert-Loir, Maria-Inés de Frutos-Fernandez
 -/
-import Mathlib.LinearAlgebra.TensorProduct.DirectLimit
-import Mathlib.LinearAlgebra.TensorProduct.Tower
-import Mathlib.RingTheory.Adjoin.FG
-import Mathlib.RingTheory.TensorProduct.Basic
+module
+
+public import Mathlib.LinearAlgebra.TensorProduct.DirectLimit
+public import Mathlib.LinearAlgebra.TensorProduct.Tower
+public import Mathlib.RingTheory.Adjoin.FG
+public import Mathlib.RingTheory.TensorProduct.Basic
 
 /-! # Tensor products and finitely generated submodules
 
@@ -65,6 +67,8 @@ However,  tensor products in mathlib require commutativity of the scalars,
 and direct limits of modules are restricted to modules over rings.
 
 -/
+
+public section
 
 open Submodule LinearMap
 

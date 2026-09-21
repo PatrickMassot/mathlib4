@@ -3,14 +3,14 @@ Copyright (c) 2025 Antoine Chambert-Loir, María Inés de Frutos-Fernández. All
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Chambert-Loir, María Inés de Frutos-Fernández
 -/
+module
 
-import Mathlib.RingTheory.TensorProduct.DirectLimit.FG
-import Mathlib.RingTheory.Finiteness.Small
-import Mathlib.LinearAlgebra.TensorProduct.RightExactness
-import Mathlib.Logic.Small.Set
-import Mathlib.RingTheory.FiniteType
-import Mathlib.RingTheory.Ideal.Quotient.Operations
-import Mathlib.LinearAlgebra.Projection
+public import Mathlib.RingTheory.TensorProduct.DirectLimit.FG
+public import Mathlib.RingTheory.Finiteness.Small
+public import Mathlib.Logic.Small.Set
+public import Mathlib.RingTheory.FiniteType
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.LinearAlgebra.Projection
 
 /-! # Pure submodules
 
@@ -35,12 +35,15 @@ requires that one works on groups.
 
 -/
 
+public section
+
 universe u v
 
 namespace Submodule
 
 open AlgHom LinearMap Function Submodule MvPolynomial
 
+/-- The class of pure submodules of a module -/
 class IsPure {R : Type u} [CommSemiring R]
     {M : Type v} [AddCommMonoid M] [Module R M] (N : Submodule R M) where
   baseChange_injective' (S : Type u) [CommSemiring S] [Algebra R S] :
@@ -53,8 +56,8 @@ theorem _root_.Submodule.IsComplemented.isPure {N : Submodule R M} (hN : IsCompl
     N.IsPure where
   baseChange_injective' S _ _ := by
     obtain ⟨P, hNP⟩ := hN
-    have := Submodule.linearProjOfIsCompl_comp_subtype hNP
-    apply Function.Injective.of_comp (f := LinearMap.baseChange S (N.linearProjOfIsCompl P hNP))
+    have := Submodule.projectionOnto_comp_subtype hNP
+    apply Function.Injective.of_comp (f := LinearMap.baseChange S (N.projectionOnto P hNP))
     rw [← LinearMap.coe_comp, ← LinearMap.baseChange_comp, this]
     simp only [baseChange_id]
     apply Function.injective_id
@@ -71,6 +74,7 @@ theorem baseChange_injective (S : Type*) [CommRing S] [Algebra R S] :
   intro ht
   obtain ⟨A, hA, u, hu0, hut⟩ := exists_fg_of_baseChange_eq_zero N.subtype t ht
   have : Small.{u} A := hA.small
+  stop
   let e : (Shrink.{u} A) ≃ₐ[R] A := Shrink.algEquiv A R
   set u' := LinearMap.rTensor N e.symm.toLinearMap u with hu'
   have hN := IsPure.baseChange_injective' (Shrink.{u} A) (N := N)
